@@ -1,0 +1,79 @@
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Byte-compiled / cache
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+__pycache__/
+*.log
+
+# ======================
+# Environment & Secrets
+# ======================
+.env
+.env.*
+*.pem
+*.key
+
+# ======================
+# OS Specific
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# IDEs / Editors
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ======================
+# Testing / Coverage
+# ======================
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+.cache/
+*.cover
+*.log
+
+# ======================
+# Distribution / Build
+# ======================
+build/
+dist/
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+
+# ======================
+# Migrations (optional, if using ORM)
+# ======================
+migrations/
+alembic/
+
+# ======================
+# Local configs / data
+# ======================
+*.db
+*.sqlite3
+uploads/
+tmp/
