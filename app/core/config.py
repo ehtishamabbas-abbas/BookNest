@@ -8,7 +8,7 @@ class Settings:
     APP_ENV = os.getenv("APP_ENV")
     DATABASE_URL = os.getenv("DATABASE_URL")
     SECRET_KEY = os.getenv("SECRET_KEY")
-    JWT_ALORITHM = os.getenv("JWT_ALORITHM")
+    JWT_ALGORITHM = os.getenv("JWT_ALORITHM")
 
 settings = Settings()
 
