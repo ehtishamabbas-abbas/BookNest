@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 
 def create_app() -> FastAPI:
-    app = FastAPI(title=settings.APP_NAME | "Book Nest")
+    app = FastAPI(title=settings.APP_NAME)
 
      # cors 
     app.add_middleware(
