@@ -9,7 +9,7 @@ def create_app() -> FastAPI:
      # cors 
     app.add_middleware(
         CORSMiddleware, 
-        allow_regoins=["*"]
+        allow_origins=["*"]
     )
 
     # register the routes
