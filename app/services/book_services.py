@@ -1,4 +1,5 @@
-from app.schemas.bookSchema import CreateBookSchema, UpdateBookSchema
+from app.schemas.bookSchema import CreateBookSchema
+from app.dtos.book_dtos import CreateBookDto, UpdateBookDto
 import logging
 from app.database.connection import get_db
 from fastapi import HTTPException
@@ -6,32 +7,34 @@ from bson.objectid import ObjectId
 
 logger = logging.getLogger("uvicorn.error")
 
-async def create_book(book: CreateBookSchema):
+async def create_book(book: CreateBookDto, user_id: str):
     try:
-        book = book.model_dump()
+        book_schema = CreateBookSchema(user_id=user_id, **book.model_dump())
+        book_object = book_schema.model_dump()
+        
         db = get_db()
         collection = db["books"]
-        result = await collection.insert_one(book)
-        logger.info(f"Book created: {result.inserted_id}")
-        book["id"] = str(result.inserted_id)
-        book.pop("_id", None)
+        result = await collection.insert_one(book_object) 
 
-        return book
+        book_object["id"] = str(result.inserted_id)
+        book_object.pop("_id", None)
+
+        return book_object
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create book: {str(e)}")
 
 
-async def get_all_books():
+async def get_all_books(user_id: str):
     try:
         dg = get_db()
         collection = dg["books"]
-        books = await collection.find().to_list(100)
-        if books is None:
-            raise HTTPException(status_code=404, detail="No books found")
+
+        all_books = collection.find({"user_id": user_id})
+        books = await all_books.to_list()
 
         for book in books:
-            book["id"] = str(book["_id"]) 
-            book.pop("_id")
+            book["id"] = str(book.get("_id"))
+            book.pop("_id", None)
 
         return books
     except Exception as e:
@@ -44,6 +47,7 @@ async def get_book(book_id: str):
         book = await collection.find_one({"_id": ObjectId(book_id)})
         if book is None:
             raise HTTPException(status_code=404, detail="Book not found")
+            
         book["id"] = str(book["_id"])
         book.pop("_id")
         return book
@@ -61,7 +65,7 @@ async def delete_book(book_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete book: {str(e)}")
     
-async def update_book(book_id: str, book: UpdateBookSchema):
+async def update_book(book_id: str, book: UpdateBookDto):
     try:
         db = get_db()
         collection = db["books"] 

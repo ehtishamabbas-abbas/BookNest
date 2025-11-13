@@ -23,3 +23,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         return existing_user
     except Exception as e:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+
+async def require_admin(current_user = Depends(get_current_user)):
+    role = (current_user.get("role") or "").lower()
+    if role != "admin":
+        raise HTTPException(status_code=403, detail="Admin can only access this endpoint")
+    return current_user
