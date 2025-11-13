@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings 
 from app.routes.auth import router as auth_router
+from app.routes.book import router as book_router
 from app.database.connection import connect_to_db, close_db
 
 app = FastAPI(title=settings.APP_NAME)
@@ -21,8 +22,11 @@ async def on_startup():
 async def on_shutdown():
     await close_db()
 
-# register the routes
+# register the public routes 
 app.include_router(auth_router, prefix="/api")
+
+# register the protected routes 
+app.include_router(book_router, prefix="/api")
 
 
 @app.get("/")

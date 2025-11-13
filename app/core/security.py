@@ -29,7 +29,7 @@ async def create_jwt_access_token(data: dict):
 async def verify_jwt_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
-        return payload
+        return payload["email"]
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expired, please login again")
     except jwt.InvalidTokenError:

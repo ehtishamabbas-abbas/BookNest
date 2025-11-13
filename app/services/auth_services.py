@@ -1,3 +1,4 @@
+import email
 from fastapi import HTTPException
 from app.schemas.userSchema import CreateUserSchema, UserResponseSchema, LoginUserSchema
 from app.database.connection import get_db
@@ -50,3 +51,15 @@ async def login_user(user: LoginUserSchema):
         return token
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+async def get_current_user(token: str):
+    try:
+        email = await verify_jwt_token(token)
+        db = get_db()
+        collection = db["users"]
+        existing_user = await collection.find_one({"email": email})
+
+        return existing_user
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
