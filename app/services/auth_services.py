@@ -20,7 +20,7 @@ async def register_user(user: CreateUserSchema):
             user = user.model_dump()
             await collection.insert_one(user) 
 
-            return token
+            return {"token": token}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -45,6 +45,6 @@ async def login_user(user: LoginUserSchema):
 
         token = await create_jwt_access_token({"email": user.email}) 
     
-        return token
+        return {"token": token}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

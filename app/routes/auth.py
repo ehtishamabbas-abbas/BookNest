@@ -8,7 +8,7 @@ router = APIRouter()
 async def register(
     user: CreateUserSchema
 ):
-        return await handle_register(user)
+    return await handle_register(user)
 
 @router.post("/login-user")
 async def login(
