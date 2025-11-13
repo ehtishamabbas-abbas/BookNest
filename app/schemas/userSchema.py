@@ -23,3 +23,12 @@ class CreateUserSchema(BaseModel):
         if value == "" or value is None:
             raise ValueError("Please provide the password")
         return value
+class LoginUserSchema(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserResponseSchema(BaseModel):
+    id: str
+    name: str
+    email: EmailStr
+    role: str
