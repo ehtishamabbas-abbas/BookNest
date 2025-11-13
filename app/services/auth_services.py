@@ -1,15 +1,14 @@
-import email
 from fastapi import HTTPException
-from app.schemas.userSchema import CreateUserSchema, UserResponseSchema, LoginUserSchema
+from app.schemas.userSchema import CreateUserSchema, LoginUserSchema
 from app.database.connection import get_db
 import logging
-from app.core.security import get_password_hash, verify_password, create_jwt_access_token
+from app.core.security import get_password_hash, verify_password, create_jwt_access_token 
 
 logger = logging.getLogger("uvicorn.error")
 
 async def register_user(user: CreateUserSchema):
     try:
-        db = get_db()
+        db = get_db()   
         collection = db["users"]
 
         existing_user = await collection.find_one({"email": user.email})
@@ -19,9 +18,7 @@ async def register_user(user: CreateUserSchema):
             token = await create_jwt_access_token({"email": user.email})
             user.password = await get_password_hash(user.password)
             user = user.model_dump()
-            result = await collection.insert_one(user)
-            user["id"] = str(result.inserted_id)
-            user.pop("password") 
+            await collection.insert_one(user) 
 
             return token
 
@@ -51,15 +48,3 @@ async def login_user(user: LoginUserSchema):
         return token
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-async def get_current_user(token: str):
-    try:
-        email = await verify_jwt_token(token)
-        db = get_db()
-        collection = db["users"]
-        existing_user = await collection.find_one({"email": email})
-
-        return existing_user
-    except Exception as e:
-        raise HTTPException(status_code=401, detail="Invalid authentication credentials")

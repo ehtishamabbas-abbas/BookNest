@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 import jwt
 from app.core.config import settings
-from fastapi import HTTPException
+from fastapi import HTTPException 
 
 logger = logging.getLogger("uvicorn.error")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -12,6 +12,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 TOKEN_EXPIRE = settings.TOKEN_EXPIRE
 JWT_ALGORITHM = settings.JWT_ALGORITHM
 SECRET_KEY = settings.SECRET_KEY
+
 
 async def get_password_hash(password: str):
     return pwd_context.hash(password)

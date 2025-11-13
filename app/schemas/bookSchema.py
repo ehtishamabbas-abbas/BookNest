@@ -1,18 +1,17 @@
-
-
-from datetime import datetime
+from typing import Optional
+from pydantic import BaseModel
 
 
 class Author(BaseModel):
-    name: str
-    total_books: int
-    age: int 
+    name: Optional[str] = None
+    total_books: Optional[int] = None
+    age: Optional[int] = None 
 
 
 class Publisher(BaseModel):
-    name: str
-    country: str
-    total_books: int
+    name: Optional[str] = None
+    country: Optional[str] = None
+    total_books: Optional[int] = None
     
 
 
@@ -23,6 +22,15 @@ class CreateBookSchema(BaseModel):
     edition: int
     category: str
     publisher: Publisher
-    date_published: datetime
-    
+    date_published: str
+
+
+class UpdateBookSchema(BaseModel):
+    title: Optional[str] = None
+    author: Optional[Author] = None
+    price: Optional[float] = None
+    edition: Optional[int] = None
+    category: Optional[str] = None
+    publisher: Optional[Publisher] = None
+    date_published: Optional[str] = None
 
