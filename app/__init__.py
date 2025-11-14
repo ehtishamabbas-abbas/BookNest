@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings 
 from app.routes.auth import router as auth_router
 from app.routes.book import router as book_router
-from app.database.connection import connect_to_db, close_db
+from app.database.connection import connect_to_db, close_db  
 
 app = FastAPI(title=settings.APP_NAME)
 
@@ -16,7 +16,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def on_startup():
-    await connect_to_db()
+    await connect_to_db()  
 
 @app.on_event("shutdown")
 async def on_shutdown():

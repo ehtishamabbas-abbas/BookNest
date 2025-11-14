@@ -3,6 +3,8 @@ from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from typing import Optional
 import logging
 
+from app.indexes.collection_indexes import create_indexes
+
 DATABASE_URL = settings.DATABASE_URL
 DATABASE_NAME = settings.DATABASE_NAME
 
@@ -25,6 +27,10 @@ async def connect_to_db():
         # verify connection
         await _client.admin.command("ping")
         logger.info("Connected to database")
+
+        if _db is not None:
+            await create_indexes(_db)
+
     except Exception as e:
         logger.exception("Failed to connect to database: %s", e)
 
