@@ -15,19 +15,19 @@ class PublisherDto(BaseModel):
 
 class CreateBookDto(BaseModel): 
     title: str
-    author: AuthorDto
+    author_id: str
     price: float
     edition: int
     category: str
-    publisher: PublisherDto
+    publisher_id: str
     date_published: str
 
 
 class UpdateBookDto(BaseModel): 
     title: Optional[str] = None
-    author: Optional[AuthorDto] = None
+    author_id: Optional[str] = None
     price: Optional[float] = None
     edition: Optional[int] = None
     category: Optional[str] = None
-    publisher: Optional[PublisherDto] = None
+    publisher_id: Optional[str] = None
     date_published: Optional[str] = None

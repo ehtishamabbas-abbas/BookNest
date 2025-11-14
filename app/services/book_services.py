@@ -1,4 +1,4 @@
-from app.schemas.bookSchema import CreateBookSchema
+from app.schemas.bookSchema import CreateBookSchema 
 from app.dtos.book_dtos import CreateBookDto, UpdateBookDto
 import logging
 from app.database.connection import get_db
@@ -9,11 +9,13 @@ logger = logging.getLogger("uvicorn.error")
 
 async def create_book(book: CreateBookDto, user_id: str):
     try:
-        book_schema = CreateBookSchema(user_id=user_id, **book.model_dump())
-        book_object = book_schema.model_dump()
-        
+      
         db = get_db()
         collection = db["books"]
+         
+        book_schema = CreateBookSchema(user_id=user_id, **book.model_dump())
+        book_object = book_schema.model_dump()
+  
         result = await collection.insert_one(book_object) 
 
         book_object["id"] = str(result.inserted_id)
