@@ -1,3 +1,4 @@
+from pydantic import HttpUrl
 from app.schemas.bookSchema import CreateBookSchema 
 from app.dtos.book_dtos import CreateBookDto, UpdateBookDto
 import logging
@@ -82,5 +83,30 @@ async def update_book(book_id: str, book: UpdateBookDto):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update book: {str(e)}")
 
+
+async def search_book_by_price(min_price: float, max_price: float, user_id:str):
+    try:
+        db = get_db()
+        collection = db["books"]
+
+        pipeline = [
+            {"$match": {"price": {"$gte": min_price, "$lte": max_price}}},
+            # {"$project": {"category": 0}}, 
+            {"$lookup": { "from": "authors","localField": "user_id","foreignField": "user_id","as": "authorData"}},
+            {"$unwind": "$authorData"},
+            {"$sort": {"title": -1}}
+        ]
+        result = await collection.aggregate(pipeline).to_list(length=None)  
+ 
+        for book in result:
+            book["id"] = str(book["_id"])
+            book["authorData"]["id"] = str(book["authorData"]["_id"])
+            book.pop("_id", None)
+            book["authorData"].pop("_id", None)
+ 
+        return {"data": result}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while finding the books based on min price: {str(e)}")
 
     
